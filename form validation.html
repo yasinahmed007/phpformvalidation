@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validation</title>
+    <style>
+        .error { color: red; }
+    </style>
+    <script>
+        function validateForm() {
+            let valid = true;
+
+            // Validate Name (no spaces or special characters)
+            let name = document.forms["myForm"]["name"].value;
+            if (!/^[a-zA-Z0-9]+$/.test(name)) {
+                document.getElementById("nameErr").innerHTML = "Name cannot contain spaces or special characters.";
+                valid = false;
+            } else {
+                document.getElementById("nameErr").innerHTML = "";
+            }
+
+            // Validate Email
+            let email = document.forms["myForm"]["email"].value;
+            let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                document.getElementById("emailErr").innerHTML = "Invalid email format.";
+                valid = false;
+            } else {
+                document.getElementById("emailErr").innerHTML = "";
+            }
+
+            // Validate Mobile (only numbers and '+' allowed)
+            let mobile = document.forms["myForm"]["mobile"].value;
+            if (!/^\+?[0-9]+$/.test(mobile)) {
+                document.getElementById("mobileErr").innerHTML = "Mobile number can only contain numbers and '+'.";
+                valid = false;
+            } else {
+                document.getElementById("mobileErr").innerHTML = "";
+            }
+
+            // Validate Password and Repeat Password
+            let password = document.forms["myForm"]["password"].value;
+            let repeatPassword = document.forms["myForm"]["repeat_password"].value;
+            if (password !== repeatPassword) {
+                document.getElementById("passwordErr").innerHTML = "Passwords do not match.";
+                valid = false;
+            } else {
+                document.getElementById("passwordErr").innerHTML = "";
+            }
+
+            return valid;
+        }
+    </script>
+</head>
+<body>
+    <h2>Form Validation Example</h2>
+    <form name="myForm" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" onsubmit="return validateForm()">
+        Name: <input type="text" name="name" value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : ''; ?>">
+        <span id="nameErr" class="error"></span>
+        <br><br>
+
+        E-mail: <input type="text" name="email" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
+        <span id="emailErr" class="error"></span>
+        <br><br>
+
+        Mobile: <input type="tel" name="mobile" value="<?php echo isset($_POST['mobile']) ? htmlspecialchars($_POST['mobile']) : ''; ?>">
+        <span id="mobileErr" class="error"></span>
+        <br><br>
+
+        Website: <input type="text" name="website" value="<?php echo isset($_POST['website']) ? htmlspecialchars($_POST['website']) : ''; ?>">
+        <span id="websiteErr" class="error"></span>
+        <br><br>
+
+        Comment: <textarea name="comment" rows="5" cols="40"><?php echo isset($_POST['comment']) ? htmlspecialchars($_POST['comment']) : ''; ?></textarea>
+        <br><br>
+
+        Gender:
+        <input type="radio" name="gender" value="man" <?php if (isset($_POST['gender']) && $_POST['gender'] == "man") echo "checked";?>> Man
+        <input type="radio" name="gender" value="woman" <?php if (isset($_POST['gender']) && $_POST['gender'] == "woman") echo "checked";?>> Woman
+        <span class="error"><?php echo isset($genderErr) ? $genderErr : '';?></span>
+        <br><br>
+
+        Password: <input type="password" name="password">
+        <br><br>
+
+        Repeat Password: <input type="password" name="repeat_password">
+        <span id="passwordErr" class="error"></span>
+        <br><br>
+
+        <input type="submit" name="submit" value="Submit">
+    </form>
+</body>
+</html>
